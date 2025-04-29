@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth Table Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Truth Table Generator</h1>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-pressed="false">
+            <span class="icon" id="theme-icon" title="Dark/Light Theme">🌙</span>
+        </button>
+    </header>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.classList.contains("dark") ? "dark" : "light";
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            body.classList.remove(currentTheme);
+            body.classList.add(newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateButtonText(newTheme);
+        }
+
+        function updateButtonText(theme) {
+            const button = document.querySelector('.theme-toggle');
+            const icon = document.getElementById('theme-icon');
+            icon.textContent = theme === "dark" ? "🌞" : "🌙";
+            button.setAttribute('aria-pressed', theme === "dark");
+        }
+
+        window.onload = function () {
+            const savedTheme = localStorage.getItem("theme") || "light";
+            document.body.classList.add(savedTheme);
+            updateButtonText(savedTheme);
+        };
+    </script>
+
+    <main>
+        <section id="input-section">
+            <h2>Truth Table Input Syntax</h2>
+            <textarea id="input-syntax" placeholder="Enter your expressions here..."></textarea>
+            <div class="flex flex-row flex-wrap justify-center gap-2.5 md:gap-4">
+                <button type="button" class="grid h-14 w-14 place-items-center rounded-lg border border-neutral-400 p-2.5 text-xl font-medium" title="Negation (¬, !, ~)" onclick="appendToInput('¬')">¬</button>
+                <button type="button" class="grid h-14 w-14 place-items-center rounded-lg border border-neutral-400 p-2.5 text-xl font-medium" title="Conjunction (∧, &, &&)" onclick="appendToInput('∧')">∧</button>
+                <button type="button" class="grid h-14 w-14 place-items-center rounded-lg border border-neutral-400 p-2.5 text-xl font-medium" title="NAND (⊼, ¬∧, ¬&, ¬&&, !∧, !&, !&&, ~∧, ~&, ~&&)" onclick="appendToInput('⊼')">⊼</button>
+                <button type="button" class="grid h-14 w-14 place-items-center rounded-lg border border-neutral-400 p-2.5 text-xl font-medium" title="Disjunction (∨, |, ||)" onclick="appendToInput('∨')">∨</button>
+                <button type="button" class="grid h-14 w-14 place-items-center rounded-lg border border-neutral-400 p-2.5 text-xl font-medium" title="NOR (⊽, ¬∨, ¬|, ¬||, !∨, !|, !||, ~∨, ~|, ~||)" onclick="appendToInput('⊽')">⊽</button>
+                <button type="button" class="grid h-14 w-14 place-items-center rounded-lg border border-neutral-400 p-2.5 text-xl font-medium" title="Conditional (→, >, ->, =>)" onclick="appendToInput('→')">→</button>
+                <button type="button" class="grid h-14 w-14 place-items-center rounded-lg border border-neutral-400 p-2.5 text-xl font-medium" title="Biconditional (↔, =, ==, <>, <=>, <->)" onclick="appendToInput('↔')">↔</button>
+                <button type="button" class="grid h-14 w-14 place-items-center rounded-lg border border-neutral-400 p-2.5 text-xl font-medium" title="Exclusive Disjunction (⇹, !=, <!>, <!=)" onclick="appendToInput('⇹')">⇹</button>
+                <button type="button" class="grid h-14 w-14 place-items-center rounded-lg border border-neutral-400 p-2.5 text-xl font-medium" title="Clear Input" onclick="clearInput()">⌫</button>
+            </div>
+            <div class="button-group">
+                <button id="generate-table">Generate Truth Table</button>
+                <button id="clear-input">Clear</button>
+                <button id="download-table">Download CSV</button>
+            </div>
+        </section>
+
+        <section id="output-section">
+            <h2>Truth Table Output</h2>
+            <div id="truth-table"></div>
+        </section>
+
+        <script>
+            document.getElementById('input-syntax').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    document.getElementById('generate-table').click();
+                }
+            });
+        </script>
+    </main>
+
+    <footer>
+        <p>Legal Notice © 2025 All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
