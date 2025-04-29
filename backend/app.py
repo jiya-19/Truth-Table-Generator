@@ -2,8 +2,18 @@ from flask import Flask, request, jsonify, send_from_directory
 import itertools
 from flask_cors import CORS
 import os
-app = Flask(__name__)
+
+app = Flask(__name__, static_folder='../frontend')
 CORS(app)
+
+@app.route('/')
+def serve_index():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory(app.static_folder, path)
+
 
 # Function to evaluate logical expressions
 def evaluate_expression(expression, local_context):
@@ -56,5 +66,5 @@ def generate():
     return jsonify({"headers": headers, "rows": rows})
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))  # Render sets the PORT env variable
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
