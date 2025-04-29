@@ -1,29 +1,44 @@
-document.getElementById('generate-table').addEventListener('click', function() {
+const BACKEND_URL = 'https://truth-table-generator.onrender.com';
+
+document.getElementById('generate-table').addEventListener('click', function () {
     const input = document.getElementById('input-syntax').value;
     if (!input) {
         alert("Please enter a logical expression.");
         return;
     }
-    fetch("https://truth-table-backend.onrender.com/generate", {
-        method: "POST",
+
+    // Optional: Show loading state
+    const generateBtn = document.getElementById('generate-table');
+    generateBtn.disabled = true;
+    generateBtn.textContent = "Generating...";
+
+    fetch(`${BACKEND_URL}/generate`, {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ expression: expression })
+        body: JSON.stringify({ expression: input })
     })
     .then(response => response.json())
     .then(data => {
-        // handle data
+        displayTruthTable(data);
     })
-    .catch(error => console.error("Error:", error));    
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Something went wrong! Please check your internet or try again later.");
+    })
+    .finally(() => {
+        generateBtn.disabled = false;
+        generateBtn.textContent = "Generate Truth Table";
+    });
 });
 
-document.getElementById('clear-input').addEventListener('click', function() {
+document.getElementById('clear-input').addEventListener('click', function () {
     document.getElementById('input-syntax').value = '';
     document.getElementById('truth-table').innerHTML = '';
 });
 
-document.getElementById('download-table').addEventListener('click', function() {
+document.getElementById('download-table').addEventListener('click', function () {
     const tableData = document.getElementById('truth-table').innerHTML;
     const csvData = convertTableToCSV(tableData);
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
@@ -44,13 +59,11 @@ function displayTruthTable(data) {
     }
 
     let tableHTML = '<table><tr>';
-    // Create table headers
     data.headers.forEach(header => {
         tableHTML += `<th>${header}</th>`;
     });
     tableHTML += '</tr>';
 
-    // Create table rows
     data.rows.forEach(row => {
         tableHTML += '<tr>';
         row.forEach(cell => {
@@ -84,15 +97,4 @@ function convertTableToCSV(tableHTML) {
     });
 
     return csvRows.join('\n');
-}
-
-function displayResults(results) {
-    const resultsContainer = document.getElementById('results');
-    resultsContainer.innerHTML = ''; // Clear previous results
-    results.forEach(result => {
-        const resultText = result ? 'True' : 'False'; // Convert to True/False
-        const resultElement = document.createElement('div');
-        resultElement.textContent = resultText;
-        resultsContainer.appendChild(resultElement);
-    });
 }
