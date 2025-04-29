@@ -4,18 +4,18 @@ document.getElementById('generate-table').addEventListener('click', function() {
         alert("Please enter a logical expression.");
         return;
     }
-    fetch('http://127.0.0.1:5000/generate', {
-        method: 'POST',
+    fetch("https://truth-table-backend.onrender.com/generate", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify({ expression: input })
+        body: JSON.stringify({ expression: expression })
     })
     .then(response => response.json())
     .then(data => {
-        displayTruthTable(data);
+        // handle data
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => console.error("Error:", error));    
 });
 
 document.getElementById('clear-input').addEventListener('click', function() {
