@@ -7,4 +7,5 @@ A simple yet powerful web application that generates truth tables for logical ex
 ⚙️ Backend with Flask: Handles the logic and computation of truth tables.
 
 💡 Interactive Frontend: Clean and user-friendly interface for input and visualization.
+
 🚀 Lightweight & Fast: Runs efficiently on low-resource systems and free hosting platforms.
